@@ -25,11 +25,14 @@ export default function Highlights(){
   }, [bestSpaces, spaces]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-        nextSlide();
-    }, 3000); // Change slide every 3 seconds
+    if(bestSpacesImages && bestSpacesImages.length > 1){
+      const interval = setInterval(() => {
+          nextSlide();
+      }, 3000); // Change slide every 3 seconds
+    
 
-    return () => clearInterval(interval); // Cleanup interval on component unmount
+      return () => clearInterval(interval); // Cleanup interval on component unmount
+    }
 }, [currentIndex]);
 
   function findBestSpaces() {
@@ -42,6 +45,12 @@ export default function Highlights(){
     });
     // a.puntuacióMitjana - b.puntuacióMitjana to sort by the lowest rating.
     listSpaces.sort((a, b) => b.puntuacióMitjana - a.puntuacióMitjana); // Sorts the spaces by the highest rating.
+    console.log(listSpaces.length);
+    listSpaces.length === 0 && spaces.forEach((space) => {
+      if (space.puntuacióMitjana >= 3) { // If the rating is greater than or equal to 3, it will be added to the list of Highlights.
+        listSpaces.push(space);
+      }
+    });
     setBestSpaces(listSpaces);
   };
 
